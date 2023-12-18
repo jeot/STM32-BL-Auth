@@ -1,0 +1,8 @@
+*.[oad]
+# *~
+/*/Debug/
+/*/Release/
+/*/Drivers/
+/*/.cache/
+/*/.settings/
+/*/STM32_Cryptographic/
