@@ -91,7 +91,7 @@ int32_t SignatureVerify(const uint8_t *pSignature,
   uint8_t *pKey = &SIGN_ECC_PUB_KEY[0];
   static uint8_t preallocated_buffer[2048];
 
-    static const uint8_t P_256_a[] __attribute__((aligned(4))) =
+  static const uint8_t P_256_a[] __attribute__((aligned(4))) =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
@@ -176,7 +176,6 @@ int32_t SignatureVerify(const uint8_t *pSignature,
   EC_st.mGysize = (int32_t)sizeof(P_256_Gy);
 
   status = ECCinitEC(&EC_st, &Crypto_Buffer);
-
   if (status == ECC_SUCCESS)
   {
     status = ECCinitPoint(&PubKey, &EC_st, &Crypto_Buffer);
@@ -227,7 +226,7 @@ int32_t SignatureVerify(const uint8_t *pSignature,
   }
   else
   {
-    printf("\r\n FW Signature Check FAIL!\r\n");
+    printf("\r\n FW Signature Check FAIL2!\r\n");
     Fatal_Error_Handler();
   }
 
@@ -306,10 +305,10 @@ int32_t FW_Verify(void)
         goto ERROR;
       }
     }
+    print_buffer("Saved META HASH", pFWMeta->MetaTag, MetaDigestLength);
     printf(" FW Meta data Hash check OK!\r\n");
 
     /* 2.3 Verify meta data signature*/
-    print_buffer("META HASH", MetaDigest, MetaDigestLength);
     printf("\r\n Check FW Meta data signature\r\n");
     sig_status = SignatureVerify(&pFWMeta->MetaSig[0], &pFWMeta->MetaTag[0], MetaDigestLength);
   }
@@ -330,7 +329,8 @@ int32_t FW_Verify(void)
     if ((hash_status == HASH_SUCCESS) && (MetaDigestLength == FW_HASH_LEN))
     {
       int i;
-      print_buffer("FW HASH", MetaDigest, MetaDigestLength);
+      print_buffer("Computed FW HASH", MetaDigest, MetaDigestLength);
+      print_buffer("Saved FW HASH", pFWMeta->FwTag, FW_HASH_LEN);
       /* 3.2 Compare fw hash with fw tag */
       for (i = 0; i< FW_HASH_LEN; i++)
       {
