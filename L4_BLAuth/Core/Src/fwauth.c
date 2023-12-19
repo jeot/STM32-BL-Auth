@@ -19,19 +19,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "cmox_crypto.h"
+// #include "cmox_crypto.h"
 #include "fwauth.h"
 #include "crypto.h"
 #include "ecc_pub_key.h"
 #include <stdio.h>
 #include <string.h>
 
-
-// #include "err_codes.h"
-// #include "membuf/legacy_v3_membuf.h"
-// #include "ecc/legacy_v3_ecc.h"
-// #include "hash/legacy_v3_sha256.h"
 
 /* Private function prototypes -----------------------------------------------*/
 static int32_t SignatureVerify(const uint8_t *pSignature,

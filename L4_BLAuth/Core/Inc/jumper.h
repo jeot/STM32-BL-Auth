@@ -25,7 +25,7 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-#define FW_LIMIT 0x08008000
+#define FW_LIMIT 0x08010000
 #define APP_META_DATA_ADD FW_LIMIT
 #define APP_REGION_ROM_START (APP_META_DATA_ADD + 0x200)
 

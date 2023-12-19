@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "securitycheck_boot.h"
+#include "fwauth.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
