@@ -24,7 +24,7 @@
 #include "jumper.h"
 #include <stdint.h>
 
-#define FW_HASH_LEN              32 /* SHA256*/
+#define FW_HASH_LEN             32 /* SHA256*/
 #define FW_META_SIG_LEN         64 /* ECDSA P256*/
 #define FW_MAGIC                'FWMA'
 #define FW_META_DATA_ADD        (APP_META_DATA_ADD)

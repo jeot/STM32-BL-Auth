@@ -25,19 +25,17 @@
 #include "ecc_pub_key.h"
 #include <stdio.h>
 #include <string.h>
-
+#include <stdint.h>
 
 /* Private function prototypes -----------------------------------------------*/
-static int32_t SignatureVerify(const uint8_t *pSignature,
-                            const uint8_t *MessageDigest, const int32_t MessageDigestLength);
+static int32_t SignatureVerify(const uint8_t *pSignature, const uint8_t *MessageDigest, const int32_t MessageDigestLength);
 
-int32_t STM32_SHA256_HASH_DigestCompute(uint8_t* InputMessage, uint32_t InputMessageLength,
-                                        uint8_t *MessageDigest, int32_t* MessageDigestLength);
+int32_t STM32_SHA256_HASH_DigestCompute(uint8_t* InputMessage, uint32_t InputMessageLength, uint8_t *MessageDigest, int32_t* MessageDigestLength);
 
 void Fatal_Error_Handler(void)
 {
   printf("\r\nFatal error! Enter endless loop!\r\n");
-  while(1){};
+  while(1) {};
 }
 
 
@@ -84,11 +82,10 @@ int32_t STM32_SHA256_HASH_DigestCompute(uint8_t* InputMessage, uint32_t InputMes
 }
 
 
-int32_t SignatureVerify(const uint8_t *pSignature,
-                     const uint8_t *MessageDigest, const int32_t MessageDigestLength)
+int32_t SignatureVerify(const uint8_t *pSignature, const uint8_t *MessageDigest, const int32_t MessageDigestLength)
 {
   int32_t status = -1;
-  uint8_t *pKey = &SIGN_ECC_PUB_KEY[0];
+  uint8_t *pKey = SIGN_ECC_PUB_KEY;
   static uint8_t preallocated_buffer[2048];
 
   static const uint8_t P_256_a[] __attribute__((aligned(4))) =
@@ -310,7 +307,7 @@ int32_t FW_Verify(void)
 
     /* 2.3 Verify meta data signature*/
     printf("\r\n Check FW Meta data signature\r\n");
-    sig_status = SignatureVerify(&pFWMeta->MetaSig[0], &pFWMeta->MetaTag[0], MetaDigestLength);
+    sig_status = SignatureVerify(pFWMeta->MetaSig, pFWMeta->MetaTag, MetaDigestLength);
   }
   else
   {
