@@ -98,6 +98,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(1000);
   printf("\r\n============= BL UART Init ==========\r\n");
 
   printf("\r\n=============> BL Check and apply protections\r\n");
@@ -107,7 +108,7 @@ int main(void)
   FW_Verify();
 
   printf("\r\n=============> Jump to application \r\n");
-  // jump_to_application();
+  jump_to_application();
   /* USER CODE END 2 */
 
   /* Infinite loop */
