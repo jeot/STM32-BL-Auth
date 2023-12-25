@@ -44,18 +44,18 @@ extern uint32_t _edata;
 extern uint32_t _sbss;
 extern uint32_t _ebss;
 // extern uint32_t _eram;
-// #define BL_SRAM1_START ((uint32_t)&_sdata)
-// #define BL_SRAM1_END ((uint32_t)&_eram)
+#define BL_SRAM1_START ((uint32_t)&_sdata)
+#define BL_SRAM1_END ((uint32_t)&_ebss)
 #endif
 
-// #define SRAM_Erase() \
-//   {\
-//     uint32_t *pRam;\
-//     for (pRam = (uint32_t *)BL_SRAM1_START; pRam < (uint32_t *)BL_SRAM1_END; pRam++)\
-//     {\
-//       *pRam = 0U;\
-//     }\
-//   }
+#define SRAM_Erase() \
+  {\
+    uint32_t *pRam;\
+    for (pRam = (uint32_t *)BL_SRAM1_START; pRam < (uint32_t *)BL_SRAM1_END; pRam++)\
+    {\
+      *pRam = 0U;\
+    }\
+  }
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -79,10 +79,11 @@ void jump_to_application(void)
   typedef void (*Function_Pointer)(void);
   Function_Pointer  p_jump_to_function;
 
+  printf("erase ram from %08x to %08x\n", BL_SRAM1_START, BL_SRAM1_END);
   /* Destroy the Volatile data and CSTACK in SRAM used by Secure Boot in order to prevent any access to sensitive data
      from the loader.
   */
-  // SRAM_Erase();
+  SRAM_Erase();
 
   // uint32_t test = 0;
   // printf("_sdata: %08x\n", &_sdata);
@@ -91,21 +92,19 @@ void jump_to_application(void)
   // printf("_ebss: %08x\n", &_ebss);
   // printf("p_jump_to_function: %08x\n", &p_jump_to_function);
   // printf("jump_address: %08x\n", &jump_address);
-  // printf("test: %08x\n", &test);
+  // printf("test value: %08x\n", &test);
   // while(1);
 
   /* Initialize address to jump */
   jump_address = *(__IO uint32_t *)(((uint32_t)APP_REGION_ROM_START + 4));
   p_jump_to_function = (Function_Pointer) jump_address;
 
-  printf("setting sp...\n");
   /* Initialize loader's Stack Pointer */
   __set_MSP(*(__IO uint32_t *)(APP_REGION_ROM_START));
 
   printf("jumping...\n");
   /* Jump into loader */
   p_jump_to_function();
-
   printf("jumped! not reachable!\n");
 
 #else
@@ -125,12 +124,15 @@ void jump_to_application(void)
     pFunction JumpToApplication;
     uint32_t JumpAddress;
 
+    //printf("erase ram from %08x to %08x\n", BL_SRAM1_START, BL_SRAM1_END);
     //SRAM_Erase();
 
     /* Jump to user application */
+    printf("jumping...\n");
     JumpAddress = *(__IO uint32_t*) (BL_EXIT_STICKY + 4);
     JumpToApplication = (pFunction) JumpAddress;
     JumpToApplication(JumpAddress,MAGIC_NUMBER,APPLICATION_ADDRESS);
+    printf("jumped! not reachable!\n");
 
   }
 
