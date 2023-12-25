@@ -66,6 +66,13 @@ int _write(int fd, char* ptr, int len) {
   return len;
 }
 
+void read_uid() {
+  printf("reading device uid...\n");
+  uint32_t * uid_address;
+  uid_address = 0x1FFF7590;
+  printf("device uid: %08X%08X%08X\r\n", *(uid_address), *(uid_address+1), *(uid_address+2));
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -100,6 +107,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
   printf("\r\n============= BL UART Init ==========\r\n");
+
+  printf("\r\n=============> BL Read UID\r\n");
+  read_uid();
 
   printf("\r\n=============> BL Check and apply protections\r\n");
   CheckApplyStaticProtections();
