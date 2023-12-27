@@ -1,7 +1,21 @@
-# change the FW_LIMIT
+# Simple bootloader for STM32L4 with firmware Integrity and Authenticity
 
-based on the size of the BootLoader
-change the defined value in jumper.h (line 28):
+Based on this YouTube playlist:
+MOOC - Security Part4 : STM32 security in practice
+playlist link:
+https://www.youtube.com/playlist?list=PLnMKNibPkDnF0wt-ZI74SflnsBV4yKzkO
+
+# Download STM32 Ctypto library v4.x.x
+
+Library download link:
+https://www.st.com/en/embedded-software/x-cube-cryptolib.html
+
+Extract the library zip and copy the folder "STM32_Cryptographic" into the project directory (in this case L4_BLAuth directory).
+The "STM32_Cryptographic" folder is inside "STM32CubeExpansion_Crypto_V4.1.0\Middlewares\ST" folder.
+
+# Change the FW_LIMIT
+
+Based on the size of the bootloader change the defined value in jumper.h (line 28):
 
 // for 32KB BL size:
 #define FW_LIMIT 0x08008000
@@ -9,10 +23,9 @@ change the defined value in jumper.h (line 28):
 // for 64KB BL size:
 #define FW_LIMIT 0x08010000
 
-# change the BL_SIZE_LIMIT
+# Change the BL_SIZE_LIMIT
 
-based on the size of the BootLoader
-change the defined value
+Based on the size of the bootloader Change the defined value
 file: Host_Tools\PostBuild_fwauth.bat, (line 180):
 
 // for 32KB BL size:
@@ -21,28 +34,27 @@ SET BL_SIZE_LIMIT=32768
 // for 64KB BL size:
 SET BL_SIZE_LIMIT=65536
 
-# generate a new ecc key pair
+# Generate a new ECC key pair
 
-Generate ecc private key with NIST p256 curve:
+Generate ECC private key with NIST p256 curve:
 
-openssl ecparam -name prime256v1 -genkey -out ecc.key
+openssl.exe ecparam -name prime256v1 -genkey -out ecc.key
 
 Generate ecc public key from private key:
 
-openssl pkey -in ecc.key -pubout > ecc_pub.key
+openssl.exe pkey -in ecc.key -pubout > ecc_pub.key
 
-# generate ecc_pub_key.h
+# Generate ecc_pub_key.h
 
-generate ecc_pub_key.h header file and copy to Inc folder
+Generate ecc_pub_key.h header file and copy to Inc folder:
 
 cd Host_Tools
 .\PreBuild.bat .\ecc.key ..\L4_BLAuth\Core\Inc\
 
-# config and build App
+# Config and build App
 
-change the application base address to 0x8010200.
-this change should be done based on the bootloader flash size
-should be done in 2 places:
+Change the application base address to 0x8010200.
+This change should be done based on the bootloader flash size should be done in 2 places:
 
 file: STM32L431RCTX_FLASH.ld
 
@@ -56,13 +68,15 @@ file: system_stm32l4xx.c after the "#define VECT_TAB_BASE_ADDRESS FLASH_BASE" li
 
 #define VECT_TAB_OFFSET         0x00010200U     /*!< Vector Table base offset field.
 
-build app and generate a binary file
+Build app and generate a binary file.
 
-# generate the full flash (BL + Meta + MetaHash + MetaHashSignature + App)
+# Generate the final binary
+
+Generate the full flash binary (BL + Meta + MetaHash + MetaHashSignature + App):
 
 .\PostBuild_fwauth.bat ..\L4_BLAuth\Release\L4_BLAuth.bin path_to_app_binary_file.bin
 
-# build, program and run BLAuth app on the STM32 chip.
+# Build, program and run BLAuth app on the STM32 chip.
 
-verify that its working with serial port connection and print statements.
+Verify that its working with serial port connection and print statements.
 
