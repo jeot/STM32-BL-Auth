@@ -69,7 +69,9 @@ SET fsize=
 
 :: Get the version of the fw and save the data to temp version file
 
-SET /p Version=Version in decimal format (For instance 1): 
+SET Version=1
+:: uncomment the following line if you want to enter version manually!
+::SET /p Version=Version in decimal format (For instance 1): 
 
 ECHO Version = %Version%
 
@@ -194,7 +196,7 @@ ECHO ########## Build full binary with bootloader and app ############
 :eof
 IF EXIST %TMP_DIR% DEL /Q %TMP_DIR%\*
 endlocal
-pause
+REM pause
 	
 
 
