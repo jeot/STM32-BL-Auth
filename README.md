@@ -63,6 +63,12 @@ Generate ecc public key from private key:
 openssl.exe pkey -in ecc.key -pubout > ecc_pub.key
 ```
 
+Check the private/public key in hex format:
+
+```
+openssl.exe ec -in .\ecc.key -noout -text
+```
+
 ## Generate ecc_pub_key.h
 
 Generate ecc_pub_key.h header file and copy to Inc folder:

@@ -26,9 +26,9 @@ ECHO "################# Generate public key from private ecc key "
 ECHO #ifndef __ECC_PUB_KEY_H_ > %hfile%
 ECHO #define __ECC_PUB_KEY_H_ >> %hfile%
 ECHO static uint8_t SIGN_ECC_PUB_KEY[] = { >> %hfile%
-:: this was the old buggy one that removed any 0x04 in the begining of line!
+:: this was the old buggy one that removed any 0x04 in the begining of the line!
 ::%OPENSSL% ec -pubin -in ecc_pub.key -text -noout |%GREP% ":"|%GREP% "    "|%SED% 's/    /-/g'|%SED% 's/:/,:/g'|%AWK% -F ":" "{ print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15}"|%SED% 's/-04,//'|%SED% 's/  //g'| %SED% 's/ / 0x/g' |%SED% 's/-/ 0x/g' >> %hfile% 
-:: this is the corrected version. only removes the 0x04 on the first line:
+:: this is the corrected version. removes the 0x04 only on the first line:
 %OPENSSL% ec -pubin -in ecc_pub.key -text -noout |%GREP% ":"|%GREP% "    "|%SED% 's/    /-/g'|%SED% 's/:/,:/g'|%AWK% -F ":" "{ print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15}"|%SED% 's/  //g'|%SED% 's/ / 0x/g'|%SED% 's/-/ 0x/g'|%SED% '0,/0x04,/s//     /' >> %hfile% 
 ECHO }; >> %hfile%
 ECHO #endif /*__ECC_PUB_KEY_H_*/ >> %hfile%
